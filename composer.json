@@ -1,0 +1,26 @@
+{
+    "name": "tuyakhov/tamarin-php",
+    "type": "library",
+    "keywords": ["tamarin", "sms", "email", "api"],
+    "license": "MIT",
+    "description": "A PHP library for communicating with the Tamarin REST API",
+    "authors": [
+        {
+            "name": "Anton Tuyakhov",
+            "email": "atuyakhov@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "guzzlehttp/guzzle": "~6.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "5.4.*"
+    },
+    "autoload": {
+        "psr-4": {"Tamarin\\": "src/"}
+    },
+    "autoload-dev": {
+        "psr-4": {"Tamarin\\Tests\\": "tests/"}
+    }
+}
