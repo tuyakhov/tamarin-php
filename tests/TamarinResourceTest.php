@@ -3,6 +3,7 @@ namespace Tamarin\Tests;
 
 use Tamarin\JsonApiRepresentation;
 use Tamarin\Middleware;
+use Tamarin\ResourceStream;
 use Tamarin\Tamarin;
 
 class TamarinResourceTest extends \PHPUnit_Framework_TestCase
@@ -18,7 +19,7 @@ class TamarinResourceTest extends \PHPUnit_Framework_TestCase
                 }
             }
         }'));
-        $stack = new \GuzzleHttp\HandlerStack($handler);
+        $stack = \GuzzleHttp\HandlerStack::create($handler);
         $stack->push(Middleware::contentNegotiation(new JsonApiRepresentation()));
         $client = new Tamarin([
             'handler' => $stack
@@ -26,7 +27,33 @@ class TamarinResourceTest extends \PHPUnit_Framework_TestCase
         $resource = new MockResource($client);
         $response = $resource->getAll();
 
-        $this->assertArrayHasKey('id', $response);
-        $this->assertArrayHasKey('name', $response);
+        $this->assertInstanceOf(ResourceStream::class, $response->getBody());
+        $responseResource = $response->getBody()->getResource();
+        $this->assertInstanceOf(MockResource::class, $responseResource);
+        $this->assertEquals('Nick', $responseResource->name);
+    }
+
+    public function testCreate()
+    {
+        $handler = new MockHandler(new \GuzzleHttp\Psr7\Response(200, [], '{
+            "data": {
+                "attributes": {
+                    "dummyAttribute": "dummyValue"
+                }
+            }
+        }'));
+        $stack = \GuzzleHttp\HandlerStack::create($handler);
+        $stack->push(Middleware::contentNegotiation(new JsonApiRepresentation()));
+        $client = new Tamarin([
+            'handler' => $stack
+        ]);
+        $resource = new MockResource($client);
+        $resource->dummyAttribute = 'dummyValue';
+        $response = $resource->create();
+
+        $this->assertInstanceOf(ResourceStream::class, $response->getBody());
+        $responseResource = $response->getBody()->getResource();
+        $this->assertInstanceOf(MockResource::class, $responseResource);
+        $this->assertEquals('dummyValue', $responseResource->dummyAttribute);
     }
 }

@@ -19,7 +19,7 @@ abstract class TamarinResource extends Resource
      */
     public function getAll(array $params = [])
     {
-        return $this->client->get("/{$this->getName()}", ['query' => $params]);
+        return $this->client->get("/{$this->getName()}", ['query' => $params, 'resource' => $this]);
     }
 
     /**
@@ -29,7 +29,7 @@ abstract class TamarinResource extends Resource
      */
     public function getOne($id, array $params = [])
     {
-        return $this->client->get(str_replace('{id}', $id, "/{$this->getName()}/{id}"), ['query' => $params]);
+        return $this->client->get(str_replace('{id}', $id, "/{$this->getName()}/{id}"), ['query' => $params, 'resource' => $this]);
     }
 
     /**
@@ -49,7 +49,7 @@ abstract class TamarinResource extends Resource
     public function delete($id = null)
     {
         $id = (isset($id) ? $id : $this->id);
-        return $this->client->delete(str_replace('{id}', $id, "/{$this->getName()}/{id}"));
+        return $this->client->delete(str_replace('{id}', $id, "/{$this->getName()}/{id}"), ['resource' => $this]);
     }
 
     /**
@@ -57,6 +57,7 @@ abstract class TamarinResource extends Resource
      */
     public function getName()
     {
-        return strtolower(get_class($this)) . 's';
+        $reflectionClass = new \ReflectionClass($this);
+        return strtolower($reflectionClass->getShortName()) . 's';
     }
 }
