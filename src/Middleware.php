@@ -12,8 +12,8 @@ class Middleware
             return function (RequestInterface $request, array $options) use ($handler, $representation) {
                 if (!empty($options['resource'])) {
                     $resource = $options['resource'];
-                    $body = $representation->create($options['resource']);
-                    $request->withBody(\GuzzleHttp\Psr7\stream_for($body));
+                    $body = $representation->create($resource);
+                    $request = $request->withBody(\GuzzleHttp\Psr7\stream_for($body));
                 }
                 return $handler($request, $options)->then(
                     function (ResponseInterface $response) use ($representation, $resource) {

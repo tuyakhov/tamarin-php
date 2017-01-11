@@ -1,6 +1,7 @@
 <?php
 namespace Tamarin\Tests;
 
+use GuzzleHttp\Handler\MockHandler;
 use Tamarin\JsonApiRepresentation;
 use Tamarin\Middleware;
 use Tamarin\ResourceStream;
@@ -10,15 +11,17 @@ class TamarinResourceTest extends \PHPUnit_Framework_TestCase
 {
     public function testGet()
     {
-        $handler = new MockHandler(new \GuzzleHttp\Psr7\Response(200, [], '{
-            "data": {
-                "id": "1",
-                "type": "templates",
-                "attributes": {
-                    "name": "Nick"
+        $handler = new MockHandler([
+            new \GuzzleHttp\Psr7\Response(200, [], '{
+                "data": {
+                    "id": "1",
+                    "type": "templates",
+                    "attributes": {
+                        "name": "Nick"
+                    }
                 }
-            }
-        }'));
+            }')
+        ]);
         $stack = \GuzzleHttp\HandlerStack::create($handler);
         $stack->push(Middleware::contentNegotiation(new JsonApiRepresentation()));
         $client = new Tamarin([
@@ -35,13 +38,15 @@ class TamarinResourceTest extends \PHPUnit_Framework_TestCase
 
     public function testCreate()
     {
-        $handler = new MockHandler(new \GuzzleHttp\Psr7\Response(200, [], '{
-            "data": {
-                "attributes": {
-                    "dummyAttribute": "dummyValue"
+        $handler = new MockHandler([
+            new \GuzzleHttp\Psr7\Response(200, [], '{
+                "data": {
+                    "attributes": {
+                        "dummyAttribute": "dummyValue"
+                    }
                 }
-            }
-        }'));
+            }')
+        ]);
         $stack = \GuzzleHttp\HandlerStack::create($handler);
         $stack->push(Middleware::contentNegotiation(new JsonApiRepresentation()));
         $client = new Tamarin([
