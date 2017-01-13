@@ -13,14 +13,15 @@ class Middleware
                 if (!empty($options['resource'])) {
                     $resource = $options['resource'];
                     $body = $representation->create($resource);
-                    $request = $request->withBody(\GuzzleHttp\Psr7\stream_for($body));
+                    $request = $request
+                        ->withBody(\GuzzleHttp\Psr7\stream_for($body))
+                        ->withHeader('Content-Type', 'application/vnd.api+json');
                 }
                 return $handler($request, $options)->then(
                     function (ResponseInterface $response) use ($representation, $resource) {
                         $content = $representation->parse($response);
                         $resource->setAttributes($content);
-                        $resourceStream = new ResourceStream($resource, $response->getBody());
-                        return $response->withBody($resourceStream);
+                        return $response->withBody($response->getBody());
                     }
                 );
             };

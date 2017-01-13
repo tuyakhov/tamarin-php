@@ -42,7 +42,8 @@ class TamarinResourceTest extends \PHPUnit_Framework_TestCase
             new \GuzzleHttp\Psr7\Response(200, [], '{
                 "data": {
                     "attributes": {
-                        "dummyAttribute": "dummyValue"
+                        "dummyAttribute": "dummyValue",
+                        "id" => "dummyId"
                     }
                 }
             }')
@@ -54,11 +55,9 @@ class TamarinResourceTest extends \PHPUnit_Framework_TestCase
         ]);
         $resource = new MockResource($client);
         $resource->dummyAttribute = 'dummyValue';
-        $response = $resource->create();
+        $resource->create();
 
-        $this->assertInstanceOf(ResourceStream::class, $response->getBody());
-        $responseResource = $response->getBody()->getResource();
-        $this->assertInstanceOf(MockResource::class, $responseResource);
-        $this->assertEquals('dummyValue', $responseResource->dummyAttribute);
+        $this->assertEquals('dummyValue', $resource->dummyAttribute);
+        $this->assertEquals('dummyId', $resource->id);
     }
 }
