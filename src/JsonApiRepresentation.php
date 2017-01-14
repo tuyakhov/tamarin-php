@@ -3,9 +3,13 @@ namespace Tamarin;
 
 class JsonApiRepresentation implements RepresentationInterface
 {
-    public function parse(\Psr\Http\Message\ResponseInterface $response)
+    /**
+     * @param string $payload
+     * @return array
+     */
+    public function parse($payload)
     {
-        $object = \GuzzleHttp\json_decode($response->getBody());
+        $object = \GuzzleHttp\json_decode($payload);
         $attributes = [];
         if (!property_exists($object, 'data') && !property_exists($object, 'meta') && !property_exists($object,
                 'errors')
@@ -49,19 +53,18 @@ class JsonApiRepresentation implements RepresentationInterface
         return $attributes;
     }
 
-    public function create(ResourceInterface $resource)
+    public function create($data)
     {
         $payload = [];
-        $attributes = $resource->getAttributes();
-        if (isset($attributes['id'])) {
-            $payload['data']['id'] = $attributes['id'];
-            unset($attributes['id']);
+        if (isset($data['id'])) {
+            $payload['data']['id'] = $data['id'];
+            unset($data['id']);
         }
-        if (isset($attributes['type'])) {
-            $payload['data']['type'] = $attributes['type'];
-            unset($attributes['type']);
+        if (isset($data['type'])) {
+            $payload['data']['type'] = $data['type'];
+            unset($data['type']);
         }
-        $payload['data']['attributes'] = $attributes;
+        $payload['data']['attributes'] = $data;
         return \GuzzleHttp\json_encode($payload);
     }
 }

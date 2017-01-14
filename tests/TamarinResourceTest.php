@@ -24,16 +24,14 @@ class TamarinResourceTest extends \PHPUnit_Framework_TestCase
         ]);
         $stack = \GuzzleHttp\HandlerStack::create($handler);
         $stack->push(Middleware::contentNegotiation(new JsonApiRepresentation()));
+        $stack->push(Middleware::mediaType());
         $client = new Tamarin([
             'handler' => $stack
         ]);
         $resource = new MockResource($client);
-        $response = $resource->getAll();
-
-        $this->assertInstanceOf(ResourceStream::class, $response->getBody());
-        $responseResource = $response->getBody()->getResource();
-        $this->assertInstanceOf(MockResource::class, $responseResource);
-        $this->assertEquals('Nick', $responseResource->name);
+        $resource->getAll();
+        $this->assertEquals('Nick', $resource->name);
+        $this->assertEquals('1', $resource->id);
     }
 
     public function testCreate()
@@ -43,7 +41,7 @@ class TamarinResourceTest extends \PHPUnit_Framework_TestCase
                 "data": {
                     "attributes": {
                         "dummyAttribute": "dummyValue",
-                        "id" => "dummyId"
+                        "id": "dummyId"
                     }
                 }
             }')

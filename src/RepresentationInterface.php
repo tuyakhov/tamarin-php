@@ -1,19 +1,17 @@
 <?php
 namespace Tamarin;
 
-use \Psr\Http\Message\ResponseInterface;
-
 interface RepresentationInterface
 {
     /**
-     * @param ResponseInterface $response
-     * @return Resource
+     * @param string $payload
+     * @return array
      */
-    public function parse(ResponseInterface $response);
+    public function parse($payload);
 
     /**
-     * @param ResourceInterface $resource
-     * @return mixed
+     * @param array $data
+     * @return string
      */
-    public function create(ResourceInterface $resource);
+    public function create($data);
 }

@@ -15,6 +15,7 @@ class Tamarin extends Client
         if (!isset($config['handler'])) {
             $handler = \GuzzleHttp\HandlerStack::create();
             $handler->push(Middleware::contentNegotiation($this->representation));
+            $handler->push(Middleware::mediaType());
             $config['handler'] = $handler;
         }
         parent::__construct($config);
