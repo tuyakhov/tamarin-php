@@ -10,7 +10,7 @@ abstract class TamarinResource extends Resource
      */
     public function create()
     {
-        return $this->sendRequest('post', ['/{resource}']);
+        return $this->sendRequest('post', ['{resource}']);
     }
 
     /**
@@ -19,7 +19,7 @@ abstract class TamarinResource extends Resource
      */
     public function getAll(array $params = [])
     {
-        return $this->sendRequest('get', ['/{resource}'], ['query' => $params]);
+        return $this->sendRequest('get', ['{resource}'], ['query' => $params]);
     }
 
     /**
@@ -29,7 +29,7 @@ abstract class TamarinResource extends Resource
      */
     public function getOne($id, array $params = [])
     {
-        return $this->sendRequest('get', ['/{resource}/{id}', ['id' => $id]], ['query' => $params]);
+        return $this->sendRequest('get', ['{resource}/{id}', ['id' => $id]], ['query' => $params]);
     }
 
     /**
@@ -39,7 +39,7 @@ abstract class TamarinResource extends Resource
     public function update($id = null)
     {
         $id = (isset($id) ? $id : $this->id);
-        return $this->sendRequest('patch', ['/{resource}/{id}', ['id' => $id]]);
+        return $this->sendRequest('patch', ['{resource}/{id}', ['id' => $id]]);
     }
 
     /**
@@ -49,7 +49,7 @@ abstract class TamarinResource extends Resource
     public function delete($id = null)
     {
         $id = (isset($id) ? $id : $this->id);
-        return $this->sendRequest('delete', ['/{resource}/{id}', ['id' => $id]]);
+        return $this->sendRequest('delete', ['{resource}/{id}', ['id' => $id]]);
     }
 
     /**
